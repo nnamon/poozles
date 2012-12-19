@@ -1,0 +1,30 @@
+dumpm
+set 0 72
+set 1 101
+set 2 108
+set 3 108
+set 4 111
+set 5 44
+set 6 32
+set 7 87
+set 8 111
+set 9 114
+set 10 108
+set 11 100
+set 12 33
+dumpm
+put 0
+put 1
+put 2
+put 3
+put 4
+put 5
+put 6
+put 7
+put 8
+put 9
+put 10
+put 11
+put 12
+set a 10
+put a

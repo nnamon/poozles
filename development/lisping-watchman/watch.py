@@ -143,7 +143,7 @@ class Machine:
         if self.is_reg(src):
             io = self.registers[src]
         elif self.is_mem(src):
-            io = self.memory[src]
+            io = self.memory[int(src)]
         if io in range(256):
             self.io_write(chr(io))
         self.__int_step()
