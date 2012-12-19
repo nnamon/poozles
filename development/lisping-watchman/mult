@@ -1,0 +1,10 @@
+# do 4 * 5
+set a 0
+set b 4
+set c 0
+set d 5
+add a d
+cmp b c
+inc c
+jne 5
+dump

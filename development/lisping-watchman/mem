@@ -1,0 +1,10 @@
+dump
+dumpm
+set 50 100
+movm a 50
+dump
+dumpm
+set b 40
+movr 99 b
+dump
+dumpm

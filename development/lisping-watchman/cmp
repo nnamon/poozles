@@ -1,0 +1,19 @@
+set c 0
+set d 3
+set a 10
+set b 15
+cmp a b
+dump
+set a 50
+set b 15
+cmp a b
+dump
+set a 10
+set b 10
+cmp a b
+dump
+inc c
+cmp c d
+dump
+jne 1
+dump

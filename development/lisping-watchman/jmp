@@ -1,0 +1,11 @@
+set a 0
+set b 65
+inc a
+cmp a b
+jne 2
+put a
+set b 10
+dec a
+cmp a b
+jne 7
+put a

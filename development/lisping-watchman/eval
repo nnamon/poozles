@@ -1,0 +1,16 @@
+SET b 10	# b = 10
+SET a 20	# a = 10
+ADD a b		# a = a + b
+SET a 65
+set b 66
+set c 67
+set d 68
+set e 10
+set f -10
+put a
+put b
+put c
+put d
+put e
+put f
+
