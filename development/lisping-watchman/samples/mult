@@ -4,7 +4,7 @@ set b 4
 set c 0
 set d 5
 add a d
-cmp b c
 inc c
+cmp b c
 jne 5
 dump

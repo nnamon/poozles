@@ -1,0 +1,8 @@
+set a 65
+rtr b a
+put b
+dump
+set 0 66
+mtm 50 0
+put 50
+dumpm

@@ -1,0 +1,13 @@
+dumpm
+set a 65
+push a
+set b 66
+push b
+pop c
+pop d
+put a
+put b
+put c
+put d
+dump
+dumpm

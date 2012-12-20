@@ -1,0 +1,109 @@
+Watchman Instruction Set Reference
+
+set rm_dst v_val : rm_dst = v_val
+add r_dst r_src  : r_dst = r_dst + r_src
+sub r_dst r_src  : r_dst = r_dst - r_src
+put rm_src       : print chr(rm_src)
+cmp r_dst r_src  : see description
+movm r_dst m_src : r_dst = m_src
+movr m_dst r_src : m_dst = r_src
+inc r_dst        : r_dst += 1 
+dec r_dst        : r_dst -= 1
+jmp v_line       : register[i] = v_line
+je v_line        : register[i] = v_line if flag[z]==0
+jne v_line       : register[i] = v_line if flag[z]!=0
+drf rm_dst rm_src: rm_dst = [rm_src]
+lrf rm_dst rm_src: [rm_dst] = rm_src
+push r_src       : pushes r_src on stack
+pop r_dst        : pops a value on stack into r_dst
+mtm m_dst m_src  : m_dst = m_src
+rtr r_dst r_src  : r_dst = r_src
+nop              : nop
+dump             : see description
+dumpm            : see description
+
+
+SET
+set dest val
+    Sets dest to val. dest can be a registry or direct memory address.
+
+ADDITION
+add dest src
+    Adds src to dest and stores the result in dest. dest and src are registries.
+
+SUBTRACTION
+sub dest src
+    Subtracts src from dest and stores the result in dest. dest and src are registries.
+
+PRINT UNTO TERMINAL
+put src
+    Prints the ASCII character located in/at src. src can be a registry or direct memory address.
+
+COMPARE
+cmp dest src
+    Compares dest to src. Both are registries. If dest > src, z flag is set to 1. dest < src, 2. dest == src, 0.
+
+MOVE MEMORY TO REGISTER
+movm dest src
+     Copies the contents of a direct memory address (src) into a register (dest)
+
+MOVE REGISTER TO MEMORY
+movr dest src
+     Copies the contents of a register (src) into a direct memory address (dest).
+
+INCREMENT
+inc dest
+    Increments the value in the register by 1 and stores it in the register.
+
+DECREMENT
+dec dest
+    Decrements the value in the register by 1 and stores it in the register.
+
+UNCONDITIONAL JUMP
+jmp line
+    Unconditionally jumps to the line in code.
+
+JUMP IF EQUAL
+je line
+   Jumps to the line in code if the z flag is 0.
+
+JUMP IF NOT EQUAL
+jne line
+    Jumps to the line in code if the z flag is not 0.
+
+DEREFERENCE
+drf dest src
+    Dereferences the direct memory address stored within src (either a registry or a direct memory address) and stores it in dest (either a registry or direct memory address).
+
+LOAD REFERENCE
+lrf dest src
+    Loads the value at/in src (a registry or direct memory address) into the direct memory address referenced to by the value at/in dest (a registry or direct memory address).
+
+PUSH
+push reg
+    Pushes the contents of the register onto the direct memory address in the register s and decrements register s by 1.
+
+POP
+pop reg
+    Pops the contents of the direct memory address in register s into the register reg and increments register s by 1.
+
+MEMORY TO MEMORY
+mtm dest src
+    Copies the value located at src (a direct memory address) into dest (a direct memory address).
+
+REGISTER TO REGISTER
+rtr dest src
+    Copies the value of register src into register dest.
+
+NO OPERATION
+nop
+    0x90
+
+DUMP REGISTERS AND FLAGS
+dump
+    Dumps the contents of the registers and flags to the IO. Used for debugging.
+
+DUMP MEMORY CORE
+dumpm
+    Dumps the memory core to the IO. Used for debugging.
+

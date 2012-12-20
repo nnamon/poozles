@@ -1,0 +1,18 @@
+set a 65	# a = 65
+set b 115	# b = 115
+set c 0
+lrf c a		# [a] = a
+inc a 
+inc c
+cmp a b
+jne 3
+set c 0
+set b 50
+set d 10
+drf d c
+put d
+inc c
+cmp c b
+jne 10
+dumpm
+dump

@@ -1,29 +1,43 @@
 import sys
+import traceback
 
 class Machine:
-    clock = 0
-    prog_l = ""
-    registers = {'a': 0, 'b': 0, 'c': 0, 'd': 0, 'e': 0, 'f': 0, 'g': 0, 'i': 0, 's': 0}
-    memory = [0 for i in range(100)]
-    flags = {'z': 0}
 
-    def __init__(self, text):
-        self.prog_l = text.split("\n")        
-        self.run()
-    
+    def __init__(self, text, io_func=sys.stdout.write, run=False, memory_size=100):
+        self.prog_l = text.split("\n")
+        self.memory = [0 for i in range(memory_size)]
+        self.io_func = io_func
+        self.reset()
+        if run:
+            self.run()
+
+    def reset(self):
+        self.clock = 0
+        max_mem = len(self.memory)-1
+        self.registers = {'a': 0, 'b': 0, 'c': 0, 'd': 0, 
+                          'e': 0, 'f': 0, 'g': 0, 'i': 0, 
+                          's': max_mem, 'p': max_mem}
+        self.flags = {'z': 0}
+        self.out_log = ""
+
     def run(self):
+        self.reset()
         while True:
             if self.registers['i'] in range(len(self.prog_l)):
                 tokens = self.prog_l[self.registers['i']].split()
                 if len(tokens) > 0:
 #                    print "Clock %d" % (self.clock)
                     if not "#" in tokens[0]:
-                        self.evaluate(tokens)
+                        try:
+                            self.evaluate(tokens)
+                        except TypeError:
+                            traceback.print_exc()
+                            self.io_write("Bad input file! Except on line %d. Terminating.\n" % self.clock)
+                            return
                         self.clock += 1
                     else: self.__int_step()
                 else: break
             else: break
-
 
     def evaluate(self, instr_l):
         instr = instr_l[0].lower()
@@ -44,6 +58,13 @@ class Machine:
                  'jmp': [1, self.__ins_jmp],
                  'je': [1, self.__ins_je],
                  'jne': [1, self.__ins_jne],
+                 'drf': [2, self.__ins_drf],
+                 'lrf': [2, self.__ins_lrf],
+                 'push': [1, self.__ins_push],
+                 'pop': [1, self.__ins_pop],
+                 'mtm': [2, self.__ins_mtm],
+                 'rtr': [2, self.__ins_rtr],
+                 'nop': [0, self.__ins_nop],
                  'dump': [0, self.__deb_dump],
                  'dumpm': [0, self.__deb_dumpm],}
         if instr in descs.keys():
@@ -62,13 +83,67 @@ class Machine:
         return False
 
     def io_write(self, io):
-        sys.stdout.write(io)
+        if self.io_func: self.io_func(io)
+        self.out_log += io
 
     def __int_step(self):
         self.registers['i'] += 1
 
+    def __ins_nop(self):
+        self.__int_step()
+
+    def __ins_drf(self, dest, src):
+        addr = -1
+        if src.isdigit():
+            val_i = int(src)
+            if self.is_mem(src):
+                addr = self.memory[val_i]
+        elif self.is_reg(src):
+            addr = self.registers[src]
+        
+        if addr in range(len(self.memory)):
+            if dest.isdigit():
+                val_i = int(dest)
+                if self.is_mem(dest):
+                    self.memory[val_i] = self.memory[addr]
+            elif self.is_reg(dest):
+                self.registers[dest] = self.memory[addr]
+        self.__int_step()
+
+    def __ins_lrf(self, dest, src):
+        addr = -1
+        if dest.isdigit():
+            val_i = int(dest)
+            if self.is_mem(dest):
+                addr = self.memory[val_i]
+        elif self.is_reg(dest):
+            addr = self.registers[dest]
+
+        if addr in range(len(self.memory)):
+            if src.isdigit():
+                val_i = int(src)
+                if self.is_mem(src):
+                    self.memory[addr] = self.memory[val_i]
+            elif self.is_reg(src):
+                self.memory[addr] = self.registers[src]
+        self.__int_step()
+
     def __no_ins(self):
         print "no such instruction"
+        self.__int_step()
+
+    def __ins_push(self, reg):
+        if self.is_reg(reg):
+            val = self.registers[reg]
+            self.memory[self.registers['s']] = val
+            self.registers['s'] -= 1
+        self.__int_step()
+
+    def __ins_pop(self, reg):
+        if self.is_reg(reg):
+            self.registers['s'] += 1
+            self.registers[reg] = self.memory[self.registers['s']]
+        self.__int_step()
     
     def __ins_jmp(self, addr):
         if addr.isdigit():
@@ -120,6 +195,17 @@ class Machine:
                 self.registers[dest] = val_i
             elif self.is_mem(dest):
                 self.memory[int(dest)] = val_i
+        self.__int_step()
+
+    def __ins_rtr(self, dest, src):
+        if self.is_reg(dest) and self.is_reg(src):
+            self.registers[dest] = self.registers[src]
+        self.__int_step()
+
+    def __ins_mtm(self, dest, src):
+        if dest.isdigit() and src.isdigit():
+            if self.is_mem(dest) and self.is_mem(src):
+                self.memory[int(dest)] = self.memory[int(src)]
         self.__int_step()
 
     def __ins_movm(self, dest, src):
@@ -177,7 +263,7 @@ def chunks(l, n):
         yield l[i:i+n]
                         
 def main():
-    machine = Machine(file(sys.argv[1]).read())
+    machine = Machine(file(sys.argv[1]).read(), run=True, memory_size=200)
 
 if __name__ == "__main__":
     main()
