@@ -3,11 +3,12 @@ import traceback
 
 class Machine:
 
-    def __init__(self, text, io_func=sys.stdout.write, run=False, memory_size=100):
+    def __init__(self, text, io_func=sys.stdout.write, run=False, memory_size=100, clock_max=5000):
         self.prog_l = text.split("\n")
         self.memory = [0 for i in range(memory_size)]
         self.io_func = io_func
         self.reset()
+        self.clock_max = clock_max
         if run:
             self.run()
 
@@ -23,6 +24,9 @@ class Machine:
     def run(self):
         self.reset()
         while True:
+            if self.clock == self.clock_max:
+                self.io_write("Clock max iterations reached!")
+                return
             if self.registers['i'] in range(len(self.prog_l)):
                 tokens = self.prog_l[self.registers['i']].split()
                 if len(tokens) > 0:
