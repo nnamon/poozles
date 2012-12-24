@@ -1,0 +1,15 @@
+set a 97
+set b 123
+put a
+inc a
+cmp a b
+jne 2
+set c 91
+cmp b c
+je 12
+set a 65
+set b 91
+jmp 2
+nop
+
+

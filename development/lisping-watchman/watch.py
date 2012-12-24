@@ -133,7 +133,7 @@ class Machine:
         self.__int_step()
 
     def __no_ins(self):
-        print "no such instruction"
+        self.io_write("no such instruction\n")
         self.__int_step()
 
     def __ins_push(self, reg):
