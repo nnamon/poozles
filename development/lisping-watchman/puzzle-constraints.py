@@ -3,7 +3,7 @@ import watch
 def main():
     print "To get the secret, you will have to output the following:"
     print "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    print "Please enter exactly 13 lines of valid instructions."
+    print "Please enter exactly 13 lines of valid instructions.\n>>>"
     prog = ""
     for i in range(13):
         prog += raw_input() + "\n"
